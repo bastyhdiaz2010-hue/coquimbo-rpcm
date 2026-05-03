@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Banco RP</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: linear-gradient(180deg, #000000, #0b1f3a);
+  color: white;
+}
+
+h1 {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.wrapper {
+  display: flex;
+  justify-content: flex-start;
+  gap: 40px;
+  padding: 40px;
+}
+
+/* TARJETA */
+.card-bank {
+  width: 450px;
+  height: 220px;
+  border-radius: 15px;
+  background: linear-gradient(135deg, #0b1f3a, #1e3a8a);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+  padding: 25px;
+}
+
+.chip {
+  width: 60px;
+  height: 40px;
+  background: gold;
+  border-radius: 6px;
+}
+
+.bank-name {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.number {
+  margin-top: 20px;
+  letter-spacing: 2px;
+  font-size: 18px;
+}
+
+.balance {
+  font-size: 28px;
+  margin-top: 20px;
+  color: #4ade80;
+}
+
+.owner {
+  margin-top: 30px;
+  font-size: 14px;
+}
+
+/* TRANSFERENCIA */
+.transfer-box {
+  background: #0b1f3a;
+  padding: 15px;
+  width: 220px;
+  border-radius: 12px;
+  box-shadow: 0 0 12px rgba(0,0,0,0.6);
+}
+
+input {
+  width: 90%;
+  padding: 6px;
+  margin-top: 8px;
+  border-radius: 5px;
+  border: none;
+  font-size: 12px;
+}
+
+button {
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: black;
+  color: white;
+  border: 1px solid #1e3a8a;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+/* HISTORIAL */
+.history-box {
+  background: #0b1f3a;
+  padding: 15px;
+  width: 250px;
+  border-radius: 12px;
+  box-shadow: 0 0 12px rgba(0,0,0,0.6);
+  height: 300px;
+  overflow-y: auto;
+}
+
+.history-box p {
+  font-size: 12px;
+  opacity: 0.85;
+}
+
+/* BOTÓN CANCELAR */
+.cancel-btn {
+  background: #7f1d1d;
+  border: 1px solid red;
+  margin-top: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🏦 Banco RP</h1>
+
+<div class="wrapper">
+
+  <!-- TARJETA -->
+  <div class="card-bank">
+    <div class="chip"></div>
+
+    <p class="bank-name">Coquimpo Bank</p>
+
+    <div class="number">**** **** **** 4821</div>
+
+    <div class="balance" id="saldo">$5000000</div>
+
+    <div class="owner">Titular: Jugador RP</div>
+  </div>
+
+  <!-- TRANSFERENCIA -->
+  <div class="transfer-box">
+    <h3>🔁 Transferir</h3>
+
+    <input type="text" id="user" placeholder="Usuario">
+    <input type="number" id="amount" placeholder="Cantidad">
+
+    <button onclick="transferir()">Enviar</button>
+
+    <button class="cancel-btn" onclick="cancelar()">Cancelar última</button>
+  </div>
+
+  <!-- HISTORIAL -->
+  <div class="history-box">
+    <h3>📜 Historial</h3>
+    <div id="historial"></div>
+  </div>
+
+</div>
+
+<script>
+let dinero = localStorage.getItem("dinero");
+if (!dinero) dinero = 5000000;
+else dinero = parseInt(dinero);
+
+let historial = JSON.parse(localStorage.getItem("historial")) || [];
+let ultTransferencia = null;
+
+const saldo = document.getElementById("saldo");
+const hist = document.getElementById("historial");
+
+function actualizar() {
+  saldo.textContent = "$" + dinero;
+  localStorage.setItem("dinero", dinero);
+
+  hist.innerHTML = historial.map(h => "<p>" + h + "</p>").join("");
+  localStorage.setItem("historial", JSON.stringify(historial));
+}
+
+function transferir() {
+  let user = document.getElementById("user").value;
+  let amount = parseInt(document.getElementById("amount").value);
+
+  if (!user) return alert("Escribe un usuario");
+  if (!amount || amount <= 0) return alert("Cantidad inválida");
+
+  if (amount > dinero) {
+    alert("No tienes dinero suficiente");
+  } else {
+    dinero -= amount;
+
+    ultTransferencia = { user, amount };
+
+    historial.unshift("💸 Transferiste $" + amount + " a " + user);
+
+    actualizar();
+  }
+}
+
+function cancelar() {
+  if (!ultTransferencia) {
+    alert("No hay transferencia para cancelar");
+    return;
+  }
+
+  dinero += ultTransferencia.amount;
+
+  historial.unshift("❌ Cancelaste transferencia de $" + ultTransferencia.amount + " a " + ultTransferencia.user);
+
+  ultTransferencia = null;
+
+  actualizar();
+}
+
+actualizar();
+</script>
+
+</body>
+</html>

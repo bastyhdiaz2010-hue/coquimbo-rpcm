@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Portal Policial RP</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: linear-gradient(180deg, #000000, #0b1f3a);
+  color: white;
+}
+
+header {
+  text-align: center;
+  padding: 20px;
+}
+
+/* LOGIN */
+.login-box {
+  text-align: center;
+  margin-top: 80px;
+}
+
+input {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  width: 200px;
+}
+
+button {
+  margin-top: 10px;
+  padding: 10px 15px;
+  background: black;
+  color: white;
+  border: 1px solid #1e3a8a;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* COMISARIA */
+.container {
+  display: none;
+  padding: 20px;
+}
+
+/* MENU */
+.menu {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.menu button {
+  background: black;
+  border: 1px solid #1e3a8a;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* SECCIONES */
+.section {
+  display: none;
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 15px;
+}
+
+/* DETENIDOS */
+#detenidos {
+  background: #1f2937;
+}
+
+/* PATRULLAJE */
+#patrullaje {
+  background: #0b1f3a;
+}
+
+/* MULTAS */
+#multas {
+  background: #3b0a0a;
+}
+
+.card {
+  background: rgba(0,0,0,0.4);
+  padding: 15px;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>🚔 Portal Policial RP</h1>
+</header>
+
+<!-- LOGIN COMISARIA -->
+<div class="login-box" id="login">
+  <h2>🔐 Ingreso a Comisaría</h2>
+  <input type="password" id="clave" placeholder="Clave de acceso">
+  <br>
+  <button onclick="login()">Entrar</button>
+</div>
+
+<!-- COMISARIA -->
+<div class="container" id="comisaria">
+
+  <h2>🏢 Comisaría Central</h2>
+
+  <!-- MENU -->
+  <div class="menu">
+    <button onclick="show('detenidos')">📋 Detenidos</button>
+    <button onclick="show('patrullaje')">🚓 Patrullaje</button>
+    <button onclick="show('multas')">🧾 Multas</button>
+  </div>
+
+  <!-- DETENIDOS -->
+  <div id="detenidos" class="section">
+    <h3>📋 Registro de detenidos</h3>
+    <div class="card">
+      <input placeholder="Nombre detenido">
+      <input placeholder="Motivo">
+      <button>Registrar</button>
+    </div>
+  </div>
+
+  <!-- PATRULLAJE -->
+  <div id="patrullaje" class="section">
+    <h3>🚓 Patrullaje</h3>
+    <div class="card">
+      <p>Asignar misión de patrullaje</p>
+      <button>Asignar</button>
+    </div>
+  </div>
+
+  <!-- MULTAS -->
+  <div id="multas" class="section">
+    <h3>🧾 Multas y sanciones</h3>
+    <div class="card">
+      <input placeholder="Ciudadano">
+      <input placeholder="Monto">
+      <button>Aplicar multa</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function login() {
+  let clave = document.getElementById("clave").value;
+
+  if (clave === "0000") {
+    document.getElementById("login").style.display = "none";
+    document.getElementById("comisaria").style.display = "block";
+  } else {
+    alert("Clave incorrecta");
+  }
+}
+
+function show(id) {
+  let sections = document.querySelectorAll('.section');
+  sections.forEach(s => s.style.display = "none");
+
+  document.getElementById(id).style.display = "block";
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Coquimpo RP Hub</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: radial-gradient(circle at top, #0b1f3a, #000000);
+  color: white;
+}
+
+/* LOGIN */
+.login {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.box {
+  width: 320px;
+  background: #0b1f3a;
+  padding: 20px;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(0,0,0,0.6);
+}
+
+input {
+  width: 90%;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 8px;
+  border: none;
+}
+
+button {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px;
+  background: #000;
+  color: white;
+  border: 1px solid #1e3a8a;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* PORTAL */
+.portal {
+  display: none;
+}
+
+/* HEADER */
+header {
+  text-align: center;
+  padding: 20px;
+}
+
+/* MENU */
+.menu {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.menu button {
+  width: auto;
+  padding: 10px 15px;
+}
+
+/* SECCIONES */
+.section {
+  display: none;
+  padding: 25px;
+}
+
+.active {
+  display: block;
+}
+
+/* CARD */
+.card {
+  background: rgba(11,31,58,0.9);
+  padding: 20px;
+  border-radius: 15px;
+  margin-top: 15px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+/* ITEMS */
+.item {
+  background: rgba(0,0,0,0.4);
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* PANEL */
+.panel {
+  display: none;
+  margin-top: 10px;
+  background: #111827;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+/* FOOTER */
+footer {
+  text-align: center;
+  padding: 20px;
+  opacity: 0.6;
+}
+</style>
+</head>
+
+<body>
+
+<!-- 🔐 LOGIN -->
+<div id="loginScreen" class="login">
+  <div class="box">
+    <h2>🔐 Coquimpo RP</h2>
+
+    <input id="userInput" placeholder="Usuario">
+    <input id="passInput" type="password" placeholder="Contraseña">
+
+    <button onclick="register()">Registrarse</button>
+    <button onclick="login()">Entrar</button>
+
+    <p id="msg"></p>
+  </div>
+</div>
+
+<!-- 🌆 PORTAL -->
+<div id="portal" class="portal">
+
+<header>
+  <h1>🌆 Coquimpo RP Hub</h1>
+</header>
+
+<div class="menu">
+  <button onclick="show('inicio')">🏠 Inicio</button>
+  <button onclick="show('trabajos')">💼 Trabajos</button>
+  <button onclick="show('tienda')">🛒 Tienda</button>
+</div>
+
+<!-- INICIO -->
+<div id="inicio" class="section active">
+  <div class="card">
+    <h2>🔗 Sistemas RP</h2>
+
+    <div class="item" onclick="openPage('banco.html')">🏦 Banco RP</div>
+    <div class="item" onclick="openPage('policial.html')">🚔 Portal Policial</div>
+    <div class="item" onclick="openPage('registro.html')">🧾 Registro Civil</div>
+
+  </div>
+</div>
+
+<!-- TRABAJOS -->
+<div id="trabajos" class="section">
+  <div class="card">
+    <h2>💼 Trabajos</h2>
+
+    <div class="item" onclick="toggle('poli')">🚓 Policía</div>
+    <div id="poli" class="panel">Protege la ciudad <button>Postular</button></div>
+
+    <div class="item" onclick="toggle('taxi')">🚕 Taxista</div>
+    <div id="taxi" class="panel">Transporta ciudadanos <button>Postular</button></div>
+
+    <div class="item" onclick="toggle('camion')">🚚 Camionero</div>
+    <div id="camion" class="panel">Entrega mercancías <button>Postular</button></div>
+
+    <div class="item" onclick="toggle('meca')">🔧 Mecánico</div>
+    <div id="meca" class="panel">Repara vehículos <button>Postular</button></div>
+
+  </div>
+</div>
+
+<!-- TIENDA -->
+<div id="tienda" class="section">
+  <div class="card">
+    <h2>🛒 Tienda RP</h2>
+
+    <div class="item" onclick="toggle('carro')">🚗 Auto básico</div>
+    <div id="carro" class="panel">Vehículo inicial <button>Comprar</button></div>
+
+    <div class="item" onclick="toggle('casa')">🏠 Casa pequeña</div>
+    <div id="casa" class="panel">Tu hogar RP <button>Comprar</button></div>
+
+    <div class="item" onclick="toggle('ropa')">👕 Ropa RP</div>
+    <div id="ropa" class="panel">Personaliza tu personaje <button>Comprar</button></div>
+
+    <div class="item" onclick="toggle('fono')">📱 Teléfono RP</div>
+    <div id="fono" class="panel">Comunicación RP <button>Comprar</button></div>
+
+  </div>
+</div>
+
+<footer>
+  © Coquimpo RP Community
+</footer>
+
+</div>
+
+<script>
+
+// 🔐 REGISTRO
+function register(){
+  let u = document.getElementById("userInput").value;
+  let p = document.getElementById("passInput").value;
+
+  if(!u || !p) return msg("Completa campos");
+
+  if(localStorage.getItem("user_"+u))
+    return msg("❌ Usuario existe");
+
+  let money = (u === "vdk7w") ? 10000000 : 10000;
+
+  localStorage.setItem("user_"+u, JSON.stringify({
+    password: p,
+    money: money
+  }));
+
+  msg("✅ Usuario creado");
+}
+
+// 🔐 LOGIN (ARREGLADO 100%)
+function login(){
+  let u = document.getElementById("userInput").value;
+  let p = document.getElementById("passInput").value;
+
+  let data = localStorage.getItem("user_"+u);
+
+  if(!data) return msg("❌ Usuario no existe");
+
+  let obj = JSON.parse(data);
+
+  if(obj.password !== p) return msg("❌ Contraseña incorrecta");
+
+  if(u === "vdk7w"){
+    obj.money = 10000000;
+    localStorage.setItem("user_"+u, JSON.stringify(obj));
+  }
+
+  localStorage.setItem("activeUser", u);
+
+  document.getElementById("loginScreen").style.display = "none";
+  document.getElementById("portal").style.display = "block";
+}
+
+// 📌 CAMBIAR SECCIÓN
+function show(id){
+  document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
+
+// 🔄 TOGGLE PANELS
+function toggle(id){
+  let el = document.getElementById(id);
+  el.style.display = (el.style.display === "block") ? "none" : "block";
+}
+
+// 🌐 PÁGINAS
+function openPage(page){
+  window.location.href = page;
+}
+
+// 💬 MENSAJE
+function msg(t){
+  document.getElementById("msg").innerText = t;
+}
+
+</script>
+
+</body>
+</html>

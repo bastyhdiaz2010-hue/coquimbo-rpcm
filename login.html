@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Login RP</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: linear-gradient(180deg, #000000, #0b1f3a);
+  color: white;
+}
+
+.box {
+  width: 300px;
+  margin: 100px auto;
+  background: #0b1f3a;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.6);
+}
+
+input {
+  width: 90%;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 8px;
+  border: none;
+}
+
+button {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px;
+  background: black;
+  color: white;
+  border: 1px solid #1e3a8a;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.msg {
+  text-align: center;
+  margin-top: 10px;
+  font-size: 14px;
+  opacity: 0.8;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+  <h2>👤 Sistema RP</h2>
+
+  <input id="user" placeholder="Usuario">
+  <input id="pass" type="password" placeholder="Contraseña">
+
+  <button onclick="register()">Registrarse</button>
+  <button onclick="login()">Iniciar sesión</button>
+
+  <div class="msg" id="msg"></div>
+</div>
+
+<script>
+
+function show(text){
+  document.getElementById("msg").innerText = text;
+}
+
+function register(){
+  let user = document.getElementById("user").value;
+  let pass = document.getElementById("pass").value;
+
+  if(!user || !pass) return show("Completa los campos");
+
+  if(localStorage.getItem("user_" + user)){
+    return show("❌ Usuario ya existe");
+  }
+
+  let money = 10000;
+
+  // 👑 ADMIN AUTOMÁTICO
+  if(user === "vdk7w"){
+    money = 10000000;
+  }
+
+  let data = {
+    password: pass,
+    money: money
+  };
+
+  localStorage.setItem("user_" + user, JSON.stringify(data));
+
+  show("✅ Usuario creado");
+}
+
+function login(){
+  let user = document.getElementById("user").value;
+  let pass = document.getElementById("pass").value;
+
+  let data = localStorage.getItem("user_" + user);
+
+  if(!data) return show("❌ Usuario no existe");
+
+  let obj = JSON.parse(data);
+
+  if(obj.password !== pass) return show("❌ Contraseña incorrecta");
+
+  // 👑 FORZAR ADMIN
+  if(user === "vdk7w"){
+    obj.money = 10000000;
+    localStorage.setItem("user_" + user, JSON.stringify(obj));
+  }
+
+  localStorage.setItem("activeUser", user);
+
+  show("✅ Bienvenido " + user);
+
+  setTimeout(()=>{
+    window.location.href = "general.html";
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>
